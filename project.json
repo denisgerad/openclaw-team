@@ -1,0 +1,27 @@
+{
+  "name": "openclaw2",
+  "created": "2026-05-03T05:21:19.750537+00:00",
+  "active_version": "v2",
+  "versions": [
+    {
+      "name": "v1",
+      "timestamp": "2026-05-03T05:22:07.475320+00:00",
+      "source": "openclaw.zip",
+      "sha256": "3537b42b19af66d9",
+      "size_kb": 58.7,
+      "file_count": 45,
+      "notes": ""
+    },
+    {
+      "name": "v2",
+      "timestamp": "2026-05-03T10:12:36.167671+00:00",
+      "source": "openclaw_step1_documents.zip",
+      "sha256": "c18a3d30fe353a5c",
+      "size_kb": 20.5,
+      "file_count": 9,
+      "notes": ""
+    }
+  ],
+  "description": "",
+  "root": "/home/dennis/venv/projects/openclaw2"
+}

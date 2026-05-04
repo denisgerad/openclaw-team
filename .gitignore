@@ -29,9 +29,13 @@ backend/.env
 uploads/
 downloads/
 
+# ── ChromaDB vector store (runtime data) ─────────────────────────────────────
+chroma_db/
+
 # ── Docs & versions (local only) ─────────────────────────────────────────────
 my-docs/
 versions/
+!backend/db/migrations/versions/
 
 # ── Node / frontend ───────────────────────────────────────────────────────────
 frontend/node_modules/

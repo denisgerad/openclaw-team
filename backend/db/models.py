@@ -197,3 +197,8 @@ class AuditLog(Base):
     record_id:  Mapped[int | None]    = mapped_column(Integer, nullable=True)
     payload:    Mapped[str]           = mapped_column(Text, default="{}")
     created_at: Mapped[datetime]      = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+# ── Document Management — imported so Base.metadata includes their tables ─────
+from backend.db.document_models import Document, DocumentVersion  # noqa: E402, F401
+from backend.search.index_model import DocumentEmbedding          # noqa: E402, F401

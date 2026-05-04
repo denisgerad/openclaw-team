@@ -15,3 +15,11 @@ cryptography==42.0.7
 pydantic==2.8.2
 pydantic-settings>=2.2.1
 websockets==12.0
+
+# ── Step 2: Semantic Search ────────────────────────────────────────────────────
+chromadb==0.5.3
+pymupdf==1.24.5
+python-docx==1.1.2
+openpyxl==3.1.2
+python-pptx==0.6.23
+tiktoken==0.7.0

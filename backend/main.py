@@ -24,6 +24,7 @@ from backend.api.engine      import router as engine_router
 from backend.api.notes_files import router as notes_files_router
 from backend.api.sprint      import router as sprint_router
 from backend.api.documents   import router as documents_router
+from backend.api.search      import router as search_router
 
 logging.basicConfig(
     level=logging.INFO,
@@ -54,6 +55,11 @@ async def lifespan(app: FastAPI):
     scheduler = OpenClawScheduler(settings)
     await scheduler.startup()
     app.state.scheduler = scheduler
+
+    # 4. Index any unindexed document versions (Step 2 — runs in background)
+    from backend.search.startup_indexer import index_pending_on_startup
+    asyncio.create_task(index_pending_on_startup(settings))
+    logger.info("Startup document indexer queued ✓")
 
     yield   # ← application runs here
 
@@ -88,6 +94,7 @@ app.include_router(engine_router,      prefix="/api")
 app.include_router(notes_files_router, prefix="/api")
 app.include_router(sprint_router,      prefix="/api")
 app.include_router(documents_router,   prefix="/api")
+app.include_router(search_router,      prefix="/api")
 
 
 @app.get("/api/health")

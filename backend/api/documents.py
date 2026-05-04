@@ -27,16 +27,18 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.auth import get_current_user
+from backend.config import get_settings as _get_settings
 from backend.db.document_models import DOCUMENT_CATEGORIES, Document, DocumentVersion
 from backend.db.models import User
 from backend.db.session import get_db
+from backend.search.pipeline import index_document_version
 
 router = APIRouter(prefix="/docs", tags=["documents"])
 
@@ -207,15 +209,16 @@ async def get_document(
 
 @router.post("/upload", response_model=DocumentOut, status_code=201)
 async def upload_document(
-    file:        UploadFile = File(...),
-    name:        str        = Form(...),
-    category:    str        = Form(...),
-    description: str        = Form(""),
-    change_note: str        = Form("Initial upload"),
-    is_private:  bool       = Form(False),
-    doc_id:      int | None = Form(None),   # if set, upload as new version of existing doc
-    db:          AsyncSession = Depends(get_db),
-    user:        User         = Depends(get_current_user),
+    file:             UploadFile     = File(...),
+    name:             str            = Form(...),
+    category:         str            = Form(...),
+    description:      str            = Form(""),
+    change_note:      str            = Form("Initial upload"),
+    is_private:       bool           = Form(False),
+    doc_id:           int | None     = Form(None),   # if set, upload as new version of existing doc
+    background_tasks: BackgroundTasks = BackgroundTasks(),
+    db:               AsyncSession   = Depends(get_db),
+    user:             User           = Depends(get_current_user),
 ):
     """
     Upload a document.
@@ -294,6 +297,16 @@ async def upload_document(
     )
     db.add(version)
     await db.commit()
+    await db.refresh(version)
+
+    # ── Trigger background indexing into ChromaDB ─────────────────────────────
+    _version_id = version.id
+    import asyncio as _asyncio
+    async def _bg_index():
+        from backend.db.session import get_session as _gs
+        async with _gs() as _s:
+            await index_document_version(_version_id, _s, _get_settings())
+    _asyncio.create_task(_bg_index())
 
     # Reload with relationships for response
     return _build_doc_out(await _load_doc(doc.id, db, user))

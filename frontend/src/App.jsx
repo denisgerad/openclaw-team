@@ -8,7 +8,8 @@ import NotesPage     from "./pages/NotesPage";
 import FilesPage      from "./pages/FilesPage";
 import CalendarPage   from "./pages/CalendarPage";
 import DocumentsPage  from "./pages/DocumentsPage";
-import SearchPage     from "./pages/SearchPage";
+import SearchPage      from "./pages/SearchPage";
+import ComplexityPage  from "./pages/ComplexityPage";
 import Sidebar, { Topbar } from "./components/Sidebar";
 
 const PAGES = {
@@ -16,7 +17,8 @@ const PAGES = {
   summary:   TeamSummary,
   calendar:  CalendarPage,
   documents: DocumentsPage,
-  search:    SearchPage,
+  search:      SearchPage,
+  complexity:  ComplexityPage,
   engine:    EngineControl,
   notes:     NotesPage,
   files:     FilesPage,

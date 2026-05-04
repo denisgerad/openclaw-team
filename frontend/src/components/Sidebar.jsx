@@ -146,7 +146,8 @@ const NAV = [
   { id:"calendar",  icon:"▦",  label:"Sprint Calendar" },
   { id:"engine",    icon:"⬡",  label:"Engine Control", managerOnly: true },
   { id:"documents", icon:"📁",  label:"Documents" },
-  { id:"search",    icon:"⌕",   label:"Search & Summarise" },
+  { id:"search",     icon:"⌕",   label:"Search & Summarise" },
+  { id:"complexity", icon:"◈",   label:"Complexity" },
   { id:"notes",     icon:"✎",  label:"Notes" },
   { id:"files",     icon:"⬇",  label:"File Manager" },
 ];

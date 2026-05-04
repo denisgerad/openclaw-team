@@ -1,7 +1,7 @@
 {
   "name": "openclaw2",
   "created": "2026-05-03T05:21:19.750537+00:00",
-  "active_version": "v2",
+  "active_version": "v5",
   "versions": [
     {
       "name": "v1",
@@ -18,6 +18,33 @@
       "source": "openclaw_step1_documents.zip",
       "sha256": "c18a3d30fe353a5c",
       "size_kb": 20.5,
+      "file_count": 9,
+      "notes": ""
+    },
+    {
+      "name": "v3",
+      "timestamp": "2026-05-04T04:30:48.435653+00:00",
+      "source": "openclaw_step2_search.zip",
+      "sha256": "9b63ca085fa9318b",
+      "size_kb": 34.6,
+      "file_count": 17,
+      "notes": ""
+    },
+    {
+      "name": "v4",
+      "timestamp": "2026-05-04T05:23:45.010784+00:00",
+      "source": "openclaw_complexity.zip",
+      "sha256": "da70f37e116c167d",
+      "size_kb": 24.6,
+      "file_count": 9,
+      "notes": ""
+    },
+    {
+      "name": "v5",
+      "timestamp": "2026-05-04T05:25:54.708876+00:00",
+      "source": "openclaw_complexity.zip",
+      "sha256": "da70f37e116c167d",
+      "size_kb": 24.6,
       "file_count": 9,
       "notes": ""
     }

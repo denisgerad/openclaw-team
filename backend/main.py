@@ -25,6 +25,7 @@ from backend.api.notes_files import router as notes_files_router
 from backend.api.sprint      import router as sprint_router
 from backend.api.documents   import router as documents_router
 from backend.api.search      import router as search_router
+from backend.api.complexity   import router as complexity_router
 
 logging.basicConfig(
     level=logging.INFO,
@@ -95,6 +96,7 @@ app.include_router(notes_files_router, prefix="/api")
 app.include_router(sprint_router,      prefix="/api")
 app.include_router(documents_router,   prefix="/api")
 app.include_router(search_router,      prefix="/api")
+app.include_router(complexity_router,  prefix="/api")
 
 
 @app.get("/api/health")

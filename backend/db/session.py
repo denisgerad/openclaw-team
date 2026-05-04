@@ -10,6 +10,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 
 from backend.config import get_settings
 from backend.db.models import Base
+# Ensure all mapped classes are registered with Base.metadata before create_all
+from backend.search.complexity_models import ComplexityResult, ComplexitySection, ComplexityFactor  # noqa: F401
 
 settings = get_settings()
 

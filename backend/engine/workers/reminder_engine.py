@@ -78,6 +78,8 @@ class ReminderEngineWorker(BaseWorker):
         events = []
         now    = datetime.now(timezone.utc)
         updated_at = m.get("updated_at")
+        if updated_at is not None and updated_at.tzinfo is None:
+            updated_at = updated_at.replace(tzinfo=timezone.utc)
 
         # Rule 1: Stale update
         if updated_at:
@@ -142,6 +144,8 @@ class ReminderEngineWorker(BaseWorker):
     async def _fetch_sprint_end(self, session) -> datetime | None:
         stmt = select(Sprint.end_date).where(Sprint.is_active == True).limit(1)
         row  = (await session.execute(stmt)).scalar_one_or_none()
+        if row is not None and row.tzinfo is None:
+            row = row.replace(tzinfo=timezone.utc)
         return row
 
     async def _already_sent(self, session, r: Reminder) -> bool:

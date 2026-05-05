@@ -78,11 +78,11 @@ export function Btn({ children, variant="primary", size="md", onClick, disabled,
 
 // ── Modal ─────────────────────────────────────────────────────────────────────
 
-export function Modal({ title, onClose, footer, children }) {
+export function Modal({ title, onClose, footer, children, width }) {
   return (
     <div style={{ position:"fixed", inset:0, background:"#00000088", backdropFilter:"blur(3px)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:200 }}
          onClick={e => e.target === e.currentTarget && onClose()}>
-      <div style={{ background:T.panel, border:`1px solid ${T.border2}`, borderRadius:6, width:560, maxWidth:"95vw", maxHeight:"90vh", overflowY:"auto" }}>
+      <div style={{ background:T.panel, border:`1px solid ${T.border2}`, borderRadius:6, width:width||560, maxWidth:"95vw", maxHeight:"90vh", overflowY:"auto" }}>
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"16px 20px", borderBottom:`1px solid ${T.border}` }}>
           <span style={{ fontFamily:T.mono, fontSize:12, letterSpacing:2, color:T.accent, textTransform:"uppercase" }}>{title}</span>
           <button style={{ background:"none", border:"none", color:T.muted, cursor:"pointer", fontSize:18 }} onClick={onClose}>×</button>

@@ -45,6 +45,12 @@ async function apiDownload(docId, versionNum, filename) {
   URL.revokeObjectURL(url);
 }
 
+async function apiFetchBlob(docId, versionNum) {
+  const res = await fetch(`/api/docs/${docId}/versions/${versionNum}/download`, { headers: authHdr() });
+  if (!res.ok) throw new Error("Failed to load file");
+  return res.blob();
+}
+
 // ── Constants ─────────────────────────────────────────────────────────────────
 const CATEGORIES = ["All", "Requirements", "Design", "Review", "Report", "Change Request", "Test Plan", "Architecture", "Meeting Notes", "Other"];
 
@@ -82,6 +88,80 @@ function CatBadge({ cat }) {
 }
 
 // ── Upload Modal ──────────────────────────────────────────────────────────────
+
+// ── Viewer helpers ────────────────────────────────────────────────────────────
+function viewableType(filename) {
+  const ext = filename?.split(".").pop()?.toLowerCase();
+  if (["txt", "md", "log", "csv", "json", "xml", "yaml", "yml"].includes(ext)) return "text";
+  if (ext === "pdf") return "pdf";
+  return null; // docx, xlsx, ppt, etc. — not previewable in browser
+}
+
+function ViewerModal({ doc, version, onClose }) {
+  const [content, setContent] = useState(null);
+  const [blobUrl, setBlobUrl] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error,   setError]   = useState(null);
+
+  const filename   = version?.filename       || doc.filename;
+  const versionNum = version?.version_number || doc.latest_version;
+  const type       = viewableType(filename);
+
+  useEffect(() => {
+    let url;
+    async function load() {
+      try {
+        const blob = await apiFetchBlob(doc.id, versionNum);
+        if (type === "text") {
+          setContent(await blob.text());
+        } else if (type === "pdf") {
+          url = URL.createObjectURL(blob);
+          setBlobUrl(url);
+        }
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    if (type) load(); else setLoading(false);
+    return () => { if (url) URL.revokeObjectURL(url); };
+  }, []); // eslint-disable-line
+
+  return (
+    <Modal
+      title={`${doc.name}  //  v${versionNum} — ${filename}`}
+      onClose={onClose}
+      width={920}
+      footer={<>
+        <Btn onClick={() => apiDownload(doc.id, versionNum, filename)}>⬇ Download</Btn>
+        <Btn variant="ghost" onClick={onClose}>Close</Btn>
+      </>}
+    >
+      {loading && (
+        <div style={{ padding:40, textAlign:"center", fontFamily:T.mono, color:T.muted }}>Loading…</div>
+      )}
+      {error && (
+        <div style={{ padding:20, color:T.red, fontFamily:T.mono, fontSize:12 }}>{error}</div>
+      )}
+      {!loading && !error && type === "text" && (
+        <pre style={{ fontFamily:T.mono, fontSize:12, color:T.text, whiteSpace:"pre-wrap", wordBreak:"break-word", maxHeight:"65vh", overflowY:"auto", padding:16, background:T.surface, borderRadius:3, margin:0, border:`1px solid ${T.border}` }}>
+          {content}
+        </pre>
+      )}
+      {!loading && !error && type === "pdf" && blobUrl && (
+        <iframe src={blobUrl} style={{ width:"100%", height:"65vh", border:"none", borderRadius:3 }} title={filename}/>
+      )}
+      {!loading && !error && !type && (
+        <div style={{ padding:40, textAlign:"center", fontFamily:T.mono, color:T.muted, lineHeight:2.2 }}>
+          Preview not available for this file type ({filename.split(".").pop()?.toUpperCase()}).<br/>
+          <span style={{ fontSize:11 }}>Use the Download button to open it locally.</span>
+        </div>
+      )}
+    </Modal>
+  );
+}
+
 function UploadModal({ existingDoc, onDone, onClose }) {
   const fileRef = useRef();
   const [form, setForm] = useState({
@@ -212,7 +292,7 @@ function EditModal({ doc, onDone, onClose }) {
 }
 
 // ── Version History Drawer ────────────────────────────────────────────────────
-function VersionDrawer({ doc, currentUser, onNewVersion, onDeleted, onClose }) {
+function VersionDrawer({ doc, currentUser, onNewVersion, onDeleted, onClose, onPreview }) {
   const [deleting, setDeleting] = useState(null);
 
   async function handleDeleteVersion(v) {
@@ -258,6 +338,7 @@ function VersionDrawer({ doc, currentUser, onNewVersion, onDeleted, onClose }) {
               </div>
             </div>
             <div style={{ display:"flex", gap:6, flexShrink:0 }}>
+              <Btn size="xs" variant="ghost" onClick={() => onPreview && onPreview(v)} title="View file">👁 View</Btn>
               <Btn size="xs" onClick={() => apiDownload(doc.id, v.version_number, v.filename)}>⬇ Download</Btn>
               {canManage && !v.is_latest && (
                 <Btn variant="danger" size="xs" disabled={deleting===v.id} onClick={() => handleDeleteVersion(v)}>
@@ -282,6 +363,7 @@ export default function DocumentsPage({ user }) {
   const [versioning,setVersioning]= useState(null);   // doc to add version to
   const [editing,   setEditing]   = useState(null);   // doc to edit metadata
   const [viewing,   setViewing]   = useState(null);   // doc whose versions to show
+  const [preview,   setPreview]   = useState(null);   // { doc, version } to view content
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -407,6 +489,7 @@ export default function DocumentsPage({ user }) {
 
                   {/* Actions */}
                   <div style={{ display:"flex", gap:6, justifyContent:"flex-end" }}>
+                    <Btn size="xs" variant="ghost" onClick={() => setPreview({ doc, version: null })} title="View document">👁</Btn>
                     <Btn size="xs" onClick={() => apiDownload(doc.id, doc.latest_version, doc.filename)} title="Download latest version">⬇</Btn>
                     <Btn size="xs" variant="ghost" onClick={() => setViewing(doc)} title="Version history">History</Btn>
                     <Btn size="xs" variant="ghost" onClick={() => setVersioning(doc)} title="Upload new version">+ Ver</Btn>
@@ -428,7 +511,9 @@ export default function DocumentsPage({ user }) {
       {viewing     && <VersionDrawer doc={viewing} currentUser={user}
                         onNewVersion={()=>{ setVersioning(viewing); setViewing(null); }}
                         onDeleted={()=>{ load(); setViewing(null); }}
+                        onPreview={v=>{ setPreview({ doc: viewing, version: v }); setViewing(null); }}
                         onClose={()=>setViewing(null)}/>}
+      {preview     && <ViewerModal doc={preview.doc} version={preview.version} onClose={()=>setPreview(null)}/>}
     </>
   );
 }

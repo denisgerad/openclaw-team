@@ -159,7 +159,9 @@ export default function Sidebar({ activePage, onNav, user }) {
       {NAV.filter(n => !n.managerOnly || user?.role === "manager").map(n => (
         <div key={n.id}
           onClick={() => onNav(n.id)}
-          style={{ display:"flex", alignItems:"center", gap:10, padding:"9px 20px", fontSize:12.5, color:activePage===n.id ? T.accent : T.muted, cursor:"pointer", borderLeft:activePage===n.id ? `2px solid ${T.accent}` : "2px solid transparent", background:activePage===n.id ? "#00d4ff08" : "transparent", transition:"all 0.12s" }}
+          style={{ display:"flex", alignItems:"center", gap:10, padding:"9px 20px", fontSize:12.5, color:activePage===n.id ? T.accent : "#a0b4c8", cursor:"pointer", borderLeft:activePage===n.id ? `2px solid ${T.accent}` : "2px solid transparent", background:activePage===n.id ? "#00d4ff08" : "transparent", transition:"all 0.12s" }}
+          onMouseEnter={e=>{ if(activePage!==n.id) e.currentTarget.style.color="#cde0f0"; }}
+          onMouseLeave={e=>{ if(activePage!==n.id) e.currentTarget.style.color="#a0b4c8"; }}
         >
           <span style={{ fontSize:14, width:18, textAlign:"center" }}>{n.icon}</span>
           {n.label}

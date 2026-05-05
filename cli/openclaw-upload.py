@@ -523,33 +523,49 @@ def cmd_analyse(args: argparse.Namespace) -> None:
     print(f"Check status: python openclaw-upload.py status --version-id {args.version_id}")
 
 
+def _download_one(client, doc: dict, version_num: int | None, dest: "Path") -> None:
+    """Download a single document version and print progress."""
+    vnum    = version_num or doc["latest_version"]
+    ver_meta = next((v for v in doc["versions"] if v["version_number"] == vnum), None)
+    if version_num and not ver_meta:
+        raise SystemExit(red(f"Version {version_num} not found for document ID {doc['id']}."))
+
+    print(f"\nDownloading  {bold(doc['name'])}  "
+          f"v{vnum}  ({doc['category']})  "
+          f"{_fmt_size(ver_meta['size_bytes'] if ver_meta else 0)}")
+    print(f"To: {dest}")
+    out = client.download_version(doc["id"], vnum, dest)
+    print(green(f"✓ Saved: {out}"))
+
+
 def cmd_download(args: argparse.Namespace) -> None:
     """Download a document (or specific version) from the OpenClaw server."""
     cfg    = require_config()
     client = OpenClawClient(cfg["server"], cfg["token"])
 
-    doc = client.get_doc(args.doc_id)
-
-    # Resolve which version to download
-    if args.version:
-        version_num = args.version
-        ver_meta = next((v for v in doc["versions"] if v["version_number"] == version_num), None)
-        if not ver_meta:
-            raise SystemExit(red(f"Version {version_num} not found for document ID {args.doc_id}."))
-    else:
-        version_num = doc["latest_version"]
-        ver_meta = next((v for v in doc["versions"] if v["version_number"] == version_num), None)
+    if not args.doc_id and not args.category:
+        raise SystemExit(red("Provide --doc-id ID  or  --category CATEGORY"))
 
     dest = Path(args.output).expanduser().resolve() if args.output else Path.cwd()
 
-    print(f"\nDownloading  {bold(doc['name'])}  "
-          f"v{version_num}  ({doc['category']})  "
-          f"{_fmt_size(ver_meta['size_bytes'] if ver_meta else 0)}")
-    print(f"To: {dest}")
+    # ── Download by category (all latest versions) ────────────────────────────
+    if args.category:
+        if args.version:
+            raise SystemExit(red("--version cannot be used with --category (version is per-document)."))
+        docs = client.list_docs(args.category)
+        if not docs:
+            print(yellow(f"No documents found in category '{args.category}'."))
+            return
+        print(f"\nFound {len(docs)} document(s) in {cyan(args.category)} — downloading latest versions…")
+        for doc in docs:
+            full_doc = client.get_doc(doc["id"])   # need versions list
+            _download_one(client, full_doc, None, dest)
+        print(green(f"\n✓ {len(docs)} file(s) saved to {dest}"))
+        return
 
-    out = client.download_version(args.doc_id, version_num, dest)
-
-    print(green(f"✓ Saved: {out}"))
+    # ── Download by doc-id ────────────────────────────────────────────────────
+    doc = client.get_doc(args.doc_id)
+    _download_one(client, doc, args.version, dest)
 
 
 # ── Argument parser ───────────────────────────────────────────────────────────
@@ -625,11 +641,13 @@ Examples:
     p_dl = sub.add_parser(
         "download",
         help="Download a document from the server to your local machine",
-        description="Download a document (latest version by default) from the OpenClaw server.",
+        description="Download by doc ID or by category (latest version of each).",
     )
-    p_dl.add_argument("--doc-id",  type=int, required=True, metavar="ID",  help="Document ID (from 'list' command)")
-    p_dl.add_argument("--version", type=int, metavar="N",                  help="Version number to download (default: latest)")
-    p_dl.add_argument("--output",  metavar="DIR",                          help="Destination folder (default: current directory)")
+    grp = p_dl.add_mutually_exclusive_group(required=True)
+    grp.add_argument("--doc-id",   type=int, metavar="ID",       help="Document ID (from 'list' command)")
+    grp.add_argument("--category", choices=VALID_CATEGORIES,     help="Download latest version of ALL docs in this category")
+    p_dl.add_argument("--version", type=int, metavar="N",        help="Specific version to download (only with --doc-id)")
+    p_dl.add_argument("--output",  metavar="DIR",                help="Destination folder (default: current directory)")
 
     return parser
 

@@ -413,8 +413,8 @@ export default function DocumentsPage({ user }) {
             onClick={() => setActiveCat(c => c===cat ? "All" : cat)}
             style={{ display:"flex", alignItems:"center", gap:6, padding:"6px 12px", borderRadius:3, border:`1px solid ${activeCat===cat ? CAT_COLORS[cat] : T.border}`, background:activeCat===cat ? CAT_COLORS[cat]+"18" : T.panel, cursor:"pointer", transition:"all 0.12s" }}
           >
-            <span style={{ fontFamily:T.mono, fontSize:9, color: activeCat===cat ? CAT_COLORS[cat] : T.muted, letterSpacing:1 }}>{cat}</span>
-            {catCounts[cat] && <span style={{ fontFamily:T.mono, fontSize:9, color:T.muted }}>({catCounts[cat]})</span>}
+            <span style={{ fontFamily:T.mono, fontSize:12, color: activeCat===cat ? CAT_COLORS[cat] : T.muted, letterSpacing:1 }}>{cat}</span>
+            {catCounts[cat] && <span style={{ fontFamily:T.mono, fontSize:12, color:T.muted }}>({catCounts[cat]})</span>}
           </div>
         ))}
       </div>

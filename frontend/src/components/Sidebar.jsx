@@ -13,7 +13,7 @@ export const T = {
   border:  "#1e2730",
   border2: "#2a3545",
   text:    "#c8d8e8",
-  muted:   "#4a5a6a",
+  muted:   "#6e8fa8",
   accent:  "#00d4ff",
   red:     "#ff3b3b",
   orange:  "#ff8c00",
@@ -172,8 +172,8 @@ export default function Sidebar({ activePage, onNav, user }) {
         SYSTEM<br/>
         <span style={{ color:T.green }}>●</span> Engine Online<br/>
         <span style={{ color:T.green }}>●</span> DB Connected<br/>
-        <span style={{ color:T.muted }}>● </span>Gmail (stub)<br/>
-        <span style={{ color:T.muted }}>● </span>Calendar (stub)<br/>
+        <span style={{ color:"#6e8fa8" }}>●</span> Gmail (stub)<br/>
+        <span style={{ color:"#6e8fa8" }}>●</span> Calendar (stub)<br/>
         <span style={{ color:T.green }}>●</span> Web Search (DDG)
       </div>
     </aside>

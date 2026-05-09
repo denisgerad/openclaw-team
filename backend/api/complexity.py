@@ -256,6 +256,25 @@ async def _run_analysis(version_id: int) -> None:
             await session.commit()
             logger.info(f"[complexity] ✓ version_id={version_id} — {doc_result.section_count} sections, rating={doc_result.overall_rating}")
 
+            # Notify the uploader that analysis is complete
+            try:
+                from backend.utils.notifications import notify as _notify
+                uploader_stmt = select(DocumentVersion).where(DocumentVersion.id == version_id)
+                _ver = (await session.execute(uploader_stmt)).scalar_one_or_none()
+                if _ver:
+                    await _notify.complexity_complete(
+                        doc_name=doc_result.doc_name,
+                        overall_rating=doc_result.overall_rating,
+                        version=doc_result.version_number,
+                        actor_id=_ver.uploaded_by,
+                        actor_name=doc_result.doc_name,
+                        doc_id=doc_result.doc_id,
+                        session=session,
+                    )
+                    await session.commit()
+            except Exception as _ne:
+                logger.warning(f"[complexity] Notification error (non-fatal): {_ne}")
+
     except Exception as exc:
         logger.error(f"[complexity] Analysis failed version_id={version_id}: {exc}")
         async with get_session() as session:

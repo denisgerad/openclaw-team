@@ -299,6 +299,19 @@ async def upload_document(
     await db.commit()
     await db.refresh(version)
 
+    # ── Fire team notification ────────────────────────────────────────────────
+    from backend.utils.notifications import notify as _notify
+    await _notify.document_uploaded(
+        doc_name=doc.name,
+        category=doc.category,
+        version=next_version,
+        actor_id=user.id,
+        actor_name=user.name,
+        doc_id=doc.id,
+        session=db,
+    )
+    await db.commit()
+
     # ── Trigger background indexing into ChromaDB ─────────────────────────────
     _version_id = version.id
     import asyncio as _asyncio

@@ -40,7 +40,7 @@ function Shell() {
 
   return (
     <div style={{ display:"flex", flexDirection:"column", minHeight:"100vh", background:"#0a0c0f" }}>
-      <Topbar user={user} />
+      <Topbar user={user} onNavigate={setPage} />
       <div style={{ display:"flex", flex:1 }}>
         <Sidebar activePage={page} onNav={setPage} user={user} />
         <main style={{ flex:1, padding:"24px 28px", overflow:"auto" }}>

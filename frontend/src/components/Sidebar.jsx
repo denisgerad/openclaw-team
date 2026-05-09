@@ -3,6 +3,7 @@
  * All exported from this single file for simplicity.
  */
 import { useState, useEffect } from "react";
+import NotificationBell from "./NotificationBell";
 import { useAuth } from "../AuthContext";
 
 // ── Design tokens (inline CSS vars) ──────────────────────────────────────────
@@ -118,7 +119,7 @@ function useClock() {
   return t.toLocaleString("en-GB", { hour12:false, hour:"2-digit", minute:"2-digit", second:"2-digit", day:"2-digit", month:"short" });
 }
 
-export function Topbar({ user }) {
+export function Topbar({ user, onNavigate }) {
   const { logout } = useAuth();
   const time = useClock();
   return (
@@ -129,9 +130,10 @@ export function Topbar({ user }) {
           Open<span style={{ color:T.muted, fontWeight:300 }}>Claw</span> // TEAM
         </span>
       </div>
-      <div style={{ display:"flex", alignItems:"center", gap:20 }}>
+      <div style={{ display:"flex", alignItems:"center", gap:14 }}>
         <span style={{ fontFamily:T.mono, fontSize:11, color:T.muted, letterSpacing:1 }}>{time}</span>
         <span style={{ fontFamily:T.mono, fontSize:11, color:T.muted }}>{user?.name} · {user?.role}</span>
+        <NotificationBell onNavigate={onNavigate} />
         <Btn variant="ghost" size="sm" onClick={logout}>Log out</Btn>
       </div>
     </div>

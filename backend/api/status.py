@@ -152,4 +152,30 @@ async def update_status(
 
     await db.commit()
     await db.refresh(status)
+
+    # ── Fire team notifications for significant status changes ────────────────
+    try:
+        from backend.utils.notifications import notify as _notify
+        if body.risk_level == "Critical":
+            await _notify.risk_critical(
+                member_name=current_user.name,
+                risk_detail=body.risk_detail,
+                actor_id=current_user.id,
+                actor_name=current_user.name,
+                session=db,
+            )
+            await db.commit()
+        elif body.sprint_status == "Delayed":
+            await _notify.sprint_delayed(
+                member_name=current_user.name,
+                comments=body.comments,
+                actor_id=current_user.id,
+                actor_name=current_user.name,
+                session=db,
+            )
+            await db.commit()
+    except Exception as _ne:
+        import logging
+        logging.getLogger("openclaw").warning(f"Notification error (non-fatal): {_ne}")
+
     return _to_out(status, current_user)

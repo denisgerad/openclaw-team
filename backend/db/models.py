@@ -202,3 +202,4 @@ class AuditLog(Base):
 # ── Document Management — imported so Base.metadata includes their tables ─────
 from backend.db.document_models import Document, DocumentVersion  # noqa: E402, F401
 from backend.search.index_model import DocumentEmbedding          # noqa: E402, F401
+from backend.db.notification_models import Notification, NotificationRead  # noqa: E402, F401

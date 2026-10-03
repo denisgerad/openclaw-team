@@ -1,0 +1,972 @@
+# OpenClaw
+
+## AI-Powered Project Operations & Document Intelligence
+
+OpenClaw is an AI-assisted project operations and document intelligence platform for engineering teams.
+
+Built with **FastAPI + React/Vite** and powered by **Mistral AI**, OpenClaw demonstrates how AI, continuous monitoring, document intelligence, and workflow automation can reduce repetitive project-management activities and surface issues requiring human attention.
+
+The platform is designed as a **working proof of concept (PoC)** that can evolve into an enterprise automation solution through integration with existing project-management, collaboration, document, security, and business systems.
+
+---
+
+## 1. The Business Problem
+
+Project and engineering teams often spend significant time manually:
+
+- Collecting team status updates
+- Monitoring sprint progress
+- Identifying project risks
+- Following up on stale or overdue updates
+- Preparing management reports
+- Searching across project documentation
+- Reviewing requirements and design documents
+- Identifying complexity and potential delivery concerns
+- Triggering repetitive project-management workflows
+
+OpenClaw demonstrates an alternative approach:
+
+> **Continuously monitor available project information, use AI to analyse it, identify items requiring attention, and automate appropriate follow-up workflows.**
+
+The goal is not to remove the project manager from the process.
+
+The goal is to allow project managers to spend less time collecting and processing information and more time making decisions.
+
+---
+
+## 2. What OpenClaw Demonstrates
+
+OpenClaw combines four capabilities:
+
+```text
+                 PROJECT INFORMATION
+                         │
+             ┌───────────┴───────────┐
+             ↓                       ↓
+       Team / Sprint Data       Documents
+             │                       │
+             └───────────┬───────────┘
+                         ↓
+                  OpenClaw Engine
+                         ↓
+        ┌────────────────┼────────────────┐
+        ↓                ↓                ↓
+      AI Analysis     Risk Detection   Automation
+        │                │                │
+        └────────────────┼────────────────┘
+                         ↓
+                 Human Attention
+                         │
+              ┌──────────┼──────────┐
+              ↓          ↓          ↓
+            Alerts      Reports   Workflows
+```
+
+The current implementation demonstrates:
+
+- AI-assisted project analysis
+- Continuous background monitoring
+- Risk classification
+- Sprint monitoring
+- Automated reminders
+- Automated daily team digests
+- Workflow triggers
+- Semantic document search
+- AI document summarisation
+- Document comparison and synthesis
+- Requirements/design complexity analysis
+- Role-based access to project information
+
+---
+
+## 3. Key Capabilities
+
+| Capability | Description |
+|---|---|
+| **Dashboard** | Live team status, risk flags, and activity information |
+| **Team Summary** | AI-generated team-wide narrative using Mistral |
+| **Sprint Calendar** | Sprint board with task tracking and velocity statistics |
+| **Documents** | Version-controlled PDF, DOCX, XLSX, PPTX and TXT document store |
+| **Search & Summarise** | Semantic search across project documents with AI summarisation and comparison |
+| **Complexity Analyser** | AI-powered section-level complexity analysis for requirements and design documents |
+| **Engine Control** | Manager view of autonomous background workers and worker logs |
+| **Notes** | Personal Markdown notes |
+| **File Manager** | General file upload/download capability |
+| **Risk Classification** | AI-assisted classification of team/member risk |
+| **Automated Reminders** | Detects stale updates and approaching sprint deadlines |
+| **Daily Digest** | Generates automated team summaries |
+| **Workflow Triggers** | Fires automated escalation and sprint-warning events |
+
+---
+
+## 4. Automation Capabilities
+
+OpenClaw is designed to automate recurring project-operations activities rather than requiring managers to manually monitor every project.
+
+### Automated Monitoring
+
+The background engine can:
+
+- Detect stale team status updates
+- Identify member/project risk conditions
+- Monitor sprint deadline proximity
+- Classify risk levels using AI
+- Continuously process scheduled checks
+
+### Automated Communication
+
+The platform can:
+
+- Generate daily team digests
+- Send reminders for stale updates
+- Surface sprint warnings
+- Trigger escalation workflows
+
+### Automated Document Intelligence
+
+The platform can:
+
+- Automatically index documents
+- Extract text from supported document formats
+- Generate semantic embeddings
+- Search project knowledge semantically
+- Summarise documents
+- Compare documents
+- Synthesise information
+- Analyse requirements and design complexity
+
+### Automated Workflow Triggers
+
+The system includes background workflow workers for:
+
+- Escalations
+- Sprint warnings
+- Scheduled monitoring
+- Reminder generation
+- Digest generation
+
+The objective is to move project operations from **manual monitoring toward continuous AI-assisted automation**.
+
+---
+
+## 5. Human-in-the-Loop Automation
+
+OpenClaw is designed as an **AI-assisted automation platform**, rather than an uncontrolled autonomous decision-making system.
+
+A typical workflow can follow this pattern:
+
+```text
+Event / Project Data
+        │
+        ↓
+AI / Rules Analysis
+        │
+        ↓
+Risk / Recommendation
+        │
+        ↓
+Human Review
+        │
+        ↓
+Approved Action
+        │
+        ↓
+Workflow / Notification
+        │
+        ↓
+Audit / Operational Record
+```
+
+For a production implementation, workflows can be configured so that low-risk repetitive activities are automated while consequential actions require human approval.
+
+---
+
+## 6. Example Business Scenario
+
+Consider an engineering programme with multiple team members and active sprints.
+
+A project manager normally needs to:
+
+1. Collect status updates
+2. Review blockers
+3. Identify risks
+4. Check overdue tasks
+5. Review sprint deadlines
+6. Search project documentation
+7. Prepare a management summary
+8. Follow up with individual team members
+
+OpenClaw can automate portions of this workflow:
+
+```text
+Team Status
+    ↓
+Background Monitoring
+    ↓
+Risk Classification
+    ↓
+Stale / Risk Conditions
+    ↓
+Reminder / Escalation
+    ↓
+Daily AI Digest
+    ↓
+Manager Review
+```
+
+At the same time:
+
+```text
+Requirements / Design Documents
+             ↓
+        Document Indexing
+             ↓
+       Semantic Search
+             ↓
+      AI Analysis
+             ↓
+ Complexity / Risk Indicators
+             ↓
+       Manager Review
+```
+
+This provides a demonstration of how AI can support both **project operations and project knowledge management**.
+
+---
+
+## 7. High-Level Architecture
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│ Browser                                                      │
+│ React + Vite                                                 │
+│                                                              │
+│ Dashboard · Summary · Calendar · Documents · Search          │
+│ Complexity · Engine · Notes · Files                          │
+└──────────────────────────┬───────────────────────────────────┘
+                           │
+                           │ HTTP / JSON
+                           │
+┌──────────────────────────▼───────────────────────────────────┐
+│ FastAPI                                                      │
+│                                                              │
+│ API Routers                                                  │
+│ Authentication                                               │
+│ Project / Sprint Management                                  │
+│ Document Management                                          │
+│ Search & AI                                                  │
+│ Complexity Analysis                                           │
+│ Engine Control                                               │
+└──────────────┬──────────────────────┬────────────────────────┘
+               │                      │
+               │                      │
+       ┌───────▼────────┐     ┌──────▼───────────┐
+       │ APScheduler    │     │ AI / Search       │
+       │                │     │                   │
+       │ Risk Worker    │     │ ChromaDB          │
+       │ Reminder       │     │ Mistral AI        │
+       │ Digest         │     │ Embeddings        │
+       │ Workflow       │     │ Semantic Search   │
+       └────────────────┘     └───────────────────┘
+               │
+       ┌───────▼──────────┐
+       │ SQLite /          │
+       │ PostgreSQL        │
+       └──────────────────┘
+```
+
+---
+
+## 8. Request Flow
+
+1. React SPA authenticates using JWT.
+2. Subsequent API requests include a bearer token in the Authorization header.
+3. FastAPI validates the authentication token.
+4. Requests are dispatched to the appropriate API router.
+5. AI/search operations use Mistral and ChromaDB.
+6. Background workers run independently of HTTP requests.
+7. Scheduled workers evaluate project conditions and trigger configured workflows.
+
+---
+
+## 9. Automation Engine
+
+The background engine is one of the core components of OpenClaw.
+
+```text
+                APScheduler
+                     │
+        ┌────────────┼────────────┐
+        ↓            ↓            ↓
+     Risk         Reminder      Digest
+   Classifier      Engine       Generator
+        │            │            │
+        └────────────┼────────────┘
+                     ↓
+              Workflow Triggers
+                     │
+        ┌────────────┼────────────┐
+        ↓            ↓            ↓
+    Escalation   Sprint Warning  Actions
+```
+
+Current workers include:
+
+- Risk classifier
+- Reminder engine
+- Daily digest generator
+- Workflow trigger engine
+
+---
+
+## 10. Document Intelligence Pipeline
+
+Supported document types include:
+
+- PDF
+- DOCX
+- XLSX
+- PPTX
+- TXT
+
+The processing pipeline is:
+
+```text
+Document Upload
+      ↓
+Text Extraction
+      ↓
+Text Chunking
+      ↓
+Embedding Generation
+      ↓
+ChromaDB
+      ↓
+Semantic Search
+      ↓
+Mistral AI
+      ↓
+Summary / Comparison / Synthesis
+```
+
+This allows project teams to search and analyse information across multiple project documents rather than manually reviewing each file.
+
+---
+
+## 11. Complexity Analysis
+
+OpenClaw includes an AI-powered complexity analyser for requirements and design documents.
+
+The processing flow is:
+
+```text
+Requirements / Design Document
+              ↓
+        Section Detection
+              ↓
+       Section-by-Section
+            Analysis
+              ↓
+        Mistral Analysis
+              ↓
+      Complexity Factors
+              ↓
+        Section Scores
+              ↓
+       Overall Statistics
+```
+
+The intention is to help project teams identify areas of documentation that may require additional review or clarification.
+
+The resulting analysis should be treated as **decision support**, not as an automated replacement for engineering judgement.
+
+---
+
+## 12. Backend Structure
+
+```text
+backend/
+├── main.py
+├── config.py
+│
+├── api/
+│   ├── auth.py
+│   ├── status.py
+│   ├── sprint.py
+│   ├── documents.py
+│   ├── search.py
+│   ├── complexity.py
+│   ├── engine.py
+│   └── notes_files.py
+│
+├── db/
+│   ├── models.py
+│   ├── document_models.py
+│   ├── session.py
+│   └── seed.py
+│
+├── engine/
+│   ├── scheduler.py
+│   └── workers/
+│       ├── risk_classifier.py
+│       ├── reminder_engine.py
+│       ├── digest_generator.py
+│       └── workflow_triggers.py
+│
+└── search/
+    ├── extractor.py
+    ├── chunker.py
+    ├── chroma_store.py
+    ├── pipeline.py
+    ├── startup_indexer.py
+    ├── summariser.py
+    ├── complexity_analyser.py
+    └── complexity_models.py
+```
+
+---
+
+## 13. Frontend Structure
+
+```text
+frontend/src/
+├── App.jsx
+├── AuthContext.jsx
+│
+├── components/
+│   └── Sidebar.jsx
+│
+└── pages/
+    ├── Dashboard.jsx
+    ├── TeamSummary.jsx
+    ├── CalendarPage.jsx
+    ├── DocumentsPage.jsx
+    ├── SearchPage.jsx
+    ├── ComplexityPage.jsx
+    ├── EngineControl.jsx
+    ├── NotesPage.jsx
+    └── FilesPage.jsx
+```
+
+---
+
+## 14. Technology Stack
+
+| Layer | Technology |
+|---|---|
+| Backend | FastAPI |
+| Server | Uvicorn |
+| ORM | SQLAlchemy 2.0 async |
+| Development Database | SQLite + aiosqlite |
+| Production Database Option | PostgreSQL + asyncpg |
+| Vector Store | ChromaDB |
+| AI | Mistral AI |
+| Embeddings | Mistral Embed |
+| Background Jobs | APScheduler |
+| Authentication | JWT |
+| Password Hashing | bcrypt |
+| Frontend | React 18 + Vite |
+| Document Parsing | PyMuPDF, python-docx, openpyxl, python-pptx |
+| Search | ChromaDB + semantic embeddings |
+| API | REST / HTTP JSON |
+
+---
+
+## 15. Security
+
+The current prototype includes:
+
+- JWT-based authentication
+- Bearer-token API authentication
+- Password hashing using bcrypt
+- Role separation between managers and developers
+- Environment-based configuration
+- Configurable secret keys
+- Fernet-based token encryption capability
+
+Security configuration includes JWT and encryption settings in the environment configuration.
+
+### Production Security Evolution
+
+A production implementation should additionally consider:
+
+- HTTPS / TLS
+- Enterprise identity provider / SSO
+- Secure secret management
+- Database encryption
+- Audit logging
+- Rate limiting
+- Security headers
+- Dependency vulnerability scanning
+- Centralized application logging
+- Backup and recovery
+- Least-privilege access
+- Production-grade file/object storage
+- Network segmentation where appropriate
+
+The prototype should therefore be viewed as a **working PoC rather than a production security baseline**.
+
+---
+
+## 16. Enterprise Integration Path
+
+The current implementation is intentionally lightweight and self-contained.
+
+A future enterprise implementation could integrate OpenClaw with existing systems such as:
+
+```text
+                    Enterprise Systems
+                           │
+       ┌───────────┬───────┼────────┬───────────┐
+       ↓           ↓       ↓        ↓           ↓
+     Jira       Teams    Email    GitHub    Documents
+       │           │       │        │           │
+       └───────────┴───────┼────────┴───────────┘
+                           ↓
+                   Integration Layer
+                           ↓
+                  OpenClaw Automation
+                           ↓
+                 AI + Rules + RAG
+                           ↓
+        ┌──────────────────┼──────────────────┐
+        ↓                  ↓                  ↓
+      Alerts            Reports           Workflows
+        │                  │                  │
+        └──────────────────┼──────────────────┘
+                           ↓
+                     Human Review
+```
+
+These integrations are part of the **potential production evolution** of the platform and are not claimed as current OpenClaw functionality unless implemented separately.
+
+---
+
+## 17. Production Evolution
+
+The current project is designed as a working PoC.
+
+| Area | Current PoC | Production Evolution |
+|---|---|---|
+| Database | SQLite | PostgreSQL / enterprise database |
+| Vector Store | Local ChromaDB | Managed or enterprise vector infrastructure |
+| AI | Mistral API | Enterprise AI strategy and model governance |
+| Authentication | JWT | Enterprise SSO / identity provider |
+| Background Jobs | APScheduler | Distributed workflow/job platform |
+| File Storage | Local storage | Object / enterprise document storage |
+| Deployment | Local development | Cloud/containerised deployment |
+| Monitoring | Worker/application logs | Centralised observability |
+| Integrations | Internal APIs | Enterprise systems and APIs |
+| Security | Prototype controls | Full enterprise security architecture |
+
+The objective is to demonstrate the **automation and AI workflow first**, while maintaining a clear path toward production architecture.
+
+---
+
+## 18. Automation KPIs
+
+A production implementation should measure business impact rather than simply measuring AI activity.
+
+Potential KPIs include:
+
+- Reduction in manual status-report preparation time
+- Reduction in time required to identify project risks
+- Reduction in overdue project actions
+- Time saved searching project documentation
+- Reduction in repetitive project-management activities
+- Percentage of project updates processed automatically
+- Number of automated workflow events
+- AI recommendation acceptance rate
+- Number of issues surfaced before manual escalation
+- Manager time saved per reporting cycle
+
+Actual improvements should be established through a baseline measurement during a client implementation.
+
+---
+
+## 19. Installation & Setup
+
+## Prerequisites
+
+- Python 3.12
+- Node.js 18+
+- Mistral AI API key
+
+## 1 — Clone and Configure
+
+```bash
+git clone https://github.com/denisgerad/openclaw-team.git
+cd openclaw-team
+```
+
+Copy the example environment file:
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+Edit `backend/.env` with the required configuration.
+
+---
+
+## 20. Backend
+
+```bash
+cd /path/to/openclaw-team
+
+python3.12 -m venv backend/.venv
+
+source backend/.venv/bin/activate
+
+pip install -r backend/requirements.txt
+```
+
+Seed the development database:
+
+```bash
+python -m backend.db.seed
+```
+
+---
+
+## 21. Frontend
+
+```bash
+cd frontend
+npm install
+```
+
+---
+
+## 22. Running in Development
+
+Open two terminals.
+
+### Terminal 1 — Backend
+
+```bash
+cd /path/to/openclaw-team
+
+source backend/.venv/bin/activate
+
+uvicorn backend.main:app --reload --port 8000
+```
+
+### Terminal 2 — Frontend
+
+```bash
+cd frontend
+
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+Database tables are created automatically during backend startup.
+
+---
+
+## 23. Network Server
+
+To make the backend available to other machines:
+
+```bash
+uvicorn backend.main:app \
+  --reload \
+  --host 0.0.0.0 \
+  --port 8000
+```
+
+Configure the frontend development server:
+
+```javascript
+server: {
+  host: "0.0.0.0",
+  port: 3000,
+  proxy: {
+    "/api": "http://localhost:8000"
+  }
+}
+```
+
+Run:
+
+```bash
+npm run dev -- --host 0.0.0.0
+```
+
+Find the server IP:
+
+```bash
+ip addr show eth0
+```
+
+Other machines can then connect to:
+
+```text
+http://<server-ip>:3000
+```
+
+---
+
+## 24. WSL on Windows
+
+If running the application inside WSL, Windows port forwarding can be configured from an elevated PowerShell session.
+
+Replace `<WSL_IP>` with the WSL interface address:
+
+```powershell
+netsh interface portproxy add v4tov4 `
+  listenport=3000 `
+  listenaddress=0.0.0.0 `
+  connectport=3000 `
+  connectaddress=<WSL_IP>
+
+netsh interface portproxy add v4tov4 `
+  listenport=8000 `
+  listenaddress=0.0.0.0 `
+  connectport=8000 `
+  connectaddress=<WSL_IP>
+```
+
+To remove the forwarding:
+
+```powershell
+netsh interface portproxy delete v4tov4 `
+  listenport=3000 `
+  listenaddress=0.0.0.0
+
+netsh interface portproxy delete v4tov4 `
+  listenport=8000 `
+  listenaddress=0.0.0.0
+```
+
+---
+
+## 25. Demo Accounts
+
+Demo accounts are created by the database seed script.
+
+For security reasons, passwords should not be published in a public repository.
+
+Use the local development seed configuration to create or reset demo users.
+
+Managers have access to Engine Control and can view team-level information.
+
+---
+
+## 26. Environment Variables
+
+Copy:
+
+```bash
+backend/.env.example
+```
+
+to:
+
+```bash
+backend/.env
+```
+
+Example configuration:
+
+```env
+# Mistral AI
+MISTRAL_API_KEY=your-mistral-api-key-here
+MISTRAL_MODEL=mistral-small-latest
+
+# Database
+DATABASE_URL=sqlite+aiosqlite:///./openclaw.db
+
+# Production database example
+# DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/openclaw
+
+# Security
+SECRET_KEY=change-this-to-a-random-64-char-hex-string
+
+JWT_ALGORITHM=HS256
+JWT_EXPIRE_MINUTES=480
+
+TOKEN_ENCRYPTION_KEY=your-fernet-key-here
+
+# Application
+APP_NAME=OpenClaw
+APP_ENV=development
+
+# Daily digest recipients
+DIGEST_RECIPIENTS=manager@yourcompany.com
+
+# Optional web search
+WEB_SEARCH_ENABLED=true
+
+# Optional Google OAuth
+# GOOGLE_CLIENT_ID=
+# GOOGLE_CLIENT_SECRET=
+# GOOGLE_REDIRECT_URI=http://localhost:8000/api/auth/oauth/callback
+```
+
+**Never commit real API keys, passwords, encryption keys, or production secrets to source control.**
+
+---
+
+## 27. Suggested Client Demonstration
+
+For an enterprise consulting audience, the recommended demonstration flow is:
+
+### 1. Start with the business problem
+
+Explain the amount of manual effort required to monitor projects, identify risks, prepare reports, and search project documentation.
+
+### 2. Show the dashboard
+
+Demonstrate:
+
+- Team status
+- Risk indicators
+- Project activity
+- Sprint information
+
+### 3. Introduce the automation engine
+
+Show that the system can operate in the background rather than requiring the manager to manually initiate every analysis.
+
+### 4. Demonstrate a risk scenario
+
+Show how project/member information can result in a risk classification or workflow event.
+
+### 5. Demonstrate document intelligence
+
+Upload or select a requirements/design document and demonstrate:
+
+- Semantic search
+- AI summary
+- Comparison
+- Complexity analysis
+
+### 6. Generate the team digest
+
+Demonstrate how information collected from the system can be converted into an executive-friendly summary.
+
+### 7. Show the enterprise evolution
+
+Explain how the same architecture could eventually connect to:
+
+- Project-management platforms
+- Collaboration tools
+- Enterprise document repositories
+- Business systems
+- Security platforms
+
+### 8. Close with measurable outcomes
+
+Discuss how a production deployment would establish baseline measurements and track:
+
+- Time saved
+- Risk identification
+- Reporting effort
+- Workflow automation
+- Manager productivity
+
+---
+
+## 28. Project Positioning
+
+OpenClaw should be viewed as a **technical demonstration of an AI-powered project-operations automation approach**, rather than as a replacement for existing enterprise project-management platforms.
+
+Its purpose is to demonstrate how an organisation can introduce an intelligent automation layer around existing processes and systems.
+
+The underlying concept is:
+
+```text
+Existing Enterprise Systems
+            ↓
+       Data / Events
+            ↓
+    AI + Automation Layer
+            ↓
+    Analysis / Decisions
+            ↓
+ Human Review Where Needed
+            ↓
+       Automated Action
+            ↓
+    Measurement / Audit
+```
+
+This architecture can be adapted to different business processes beyond project management.
+
+---
+
+## 29. Potential Extension Areas
+
+The same architecture can be extended to other enterprise automation use cases, including:
+
+### Project Operations
+
+- Project health monitoring
+- Risk identification
+- Automated reporting
+- Action tracking
+
+### Document Intelligence
+
+- Contract analysis
+- Requirements analysis
+- Policy analysis
+- Knowledge retrieval
+
+### Business Process Automation
+
+- Event-driven workflows
+- Notifications
+- Approvals
+- Escalations
+- Scheduled processing
+
+### Cybersecurity
+
+- Security-event analysis
+- Risk classification
+- Alert enrichment
+- AI-assisted investigation
+
+These are potential extensions and should be implemented and validated separately before being presented as production capabilities.
+
+---
+
+## 30. Project Status
+
+**Current status: Working Proof of Concept**
+
+The current implementation demonstrates:
+
+- Full-stack web application
+- REST API architecture
+- Authentication
+- Project/sprint management
+- AI-assisted analysis
+- Document intelligence
+- Semantic search
+- Complexity analysis
+- Background automation
+- Risk classification
+- Automated reminders
+- Automated digests
+- Workflow triggers
+
+The next stage for enterprise deployment would be integration, security hardening, observability, scalability, governance, and measurable business-value validation.
+
+---
+
+## 31. Vision
+
+OpenClaw demonstrates a simple principle:
+
+> **AI should not only answer questions. It should continuously help organisations understand what is happening, identify what requires attention, and automate appropriate actions.**
+
+The long-term direction is an **AI-assisted enterprise automation layer** that works alongside existing systems while keeping people responsible for important decisions.

@@ -1,7 +1,7 @@
 {
   "name": "openclaw2",
   "created": "2026-05-03T05:21:19.750537+00:00",
-  "active_version": "v5",
+  "active_version": "v7",
   "versions": [
     {
       "name": "v1",
@@ -46,6 +46,24 @@
       "sha256": "da70f37e116c167d",
       "size_kb": 24.6,
       "file_count": 9,
+      "notes": ""
+    },
+    {
+      "name": "v6",
+      "timestamp": "2026-05-05T04:27:36.000725+00:00",
+      "source": "openclaw_upload_cli.zip",
+      "sha256": "ff155232a295433f",
+      "size_kb": 14.4,
+      "file_count": 7,
+      "notes": ""
+    },
+    {
+      "name": "v7",
+      "timestamp": "2026-05-09T07:49:03.392274+00:00",
+      "source": "openclaw_notifications.zip",
+      "sha256": "a12e60d3ccb15488",
+      "size_kb": 28.0,
+      "file_count": 12,
       "notes": ""
     }
   ],
